@@ -1,4 +1,4 @@
-﻿@model crudEMS.Models.Employee
+@model crudEMS.Models.Employee
 
 @{
     ViewData["Title"] = "Edit Employee";
@@ -54,14 +54,14 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Mobile</label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" minlength="10" maxlength="10" asp-for="Mobile" />
+            <input type="number" class="form-control" minlength="10" maxlength="10" asp-for="Mobile" id="Mobile" />
             <span asp-validation-for="Mobile" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Address</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" asp-for="Address" />
+            <input type="text" class="form-control" asp-for="Address" id="address" />
             <span asp-validation-for="Address" class="text-danger"></span>
         </div>
     </div>
@@ -78,7 +78,7 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Designation</label>
         <div class="col-sm-2 sm-3">
-            <select class="form-control" asp-for="Designation">
+            <select class="form-control" asp-for="Designation" id="Designation">
                 <option>Peon</option>
                 <option>Manager</option>
             </select>
@@ -88,8 +88,9 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Salary</label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" min="5000" max="20000" asp-for="Salary" />
+            <input type="number" class="form-control" min="5000" max="20000" asp-for="Salary" id="Salary" />
             <span asp-validation-for="Salary" class="text-danger"></span>
+            <span id="salaryError" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
@@ -101,9 +102,69 @@
     </div>
     <div class="form-group row">
         <div class="col-sm-10">
-            <button type="submit" class="btn btn-primary">Ok</button>
-            <a class="btn btn-warning" asp-area="" asp-controller="Employee" asp-action="Index">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a class="btn btn-danger" asp-area="" asp-controller="Employee" asp-action="Index">Cancel</a>
         </div>
     </div>
   
 </form>
+
+<script>
+
+
+    // Get a reference to the mobile number input element by its id
+    const mobileInput = document.getElementById('Mobile');
+
+    // Add an event listener to the input element
+    mobileInput.addEventListener('input', function () {
+        const maxLength = 10;
+        const currentValue = this.value;
+
+        // Check if the current value exceeds the maximum length
+        if (currentValue.length > maxLength) {
+            // If it does, truncate the value to the maximum length
+            this.value = currentValue.slice(0, maxLength);
+        }
+    });
+
+
+
+    // Get references to the designation, salary input, and error message elements by their ids
+    const designationSelect = document.getElementById('Designation');
+    const salaryInput = document.getElementById('Salary');
+    const salaryError = document.getElementById('salaryError');
+
+    // Add an event listener to the designation select element
+    designationSelect.addEventListener('change', function () {
+        const selectedDesignation = this.value;
+
+        // Update the salary input field's min and max attributes based on the selected designation
+        if (selectedDesignation === 'Peon') {
+            salaryInput.min = 5000;
+            salaryInput.max = 10000;
+        } else if (selectedDesignation === 'Manager') {
+            salaryInput.min = 10000;
+            salaryInput.max = 20000;
+        }
+
+        // Clear the error message when the designation changes
+        salaryError.textContent = '';
+    });
+
+    // Add an event listener to the salary input element
+    salaryInput.addEventListener('input', function () {
+        const selectedDesignation = designationSelect.value;
+        const salary = parseFloat(this.value);
+
+        // Check if the salary is outside the valid range for the selected designation
+        if (selectedDesignation === 'Peon' && (salary < 5000 || salary > 10000)) {
+            salaryError.textContent = 'Salary should be between 5000 and 10000 for Peon.';
+        } else if (selectedDesignation === 'Manager' && (salary < 10000 || salary > 20000)) {
+            salaryError.textContent = 'Salary should be between 10000 and 20000 for Manager.';
+        } else {
+            // Clear the error message when the salary is within the valid range
+            salaryError.textContent = '';
+        }
+    });
+
+</script>
