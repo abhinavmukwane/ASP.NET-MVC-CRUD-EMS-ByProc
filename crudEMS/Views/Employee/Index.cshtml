@@ -1,4 +1,4 @@
-﻿@model List<crudEMS.Models.Employee>
+@model List<crudEMS.Models.Employee>
 
 @{
     ViewData["Title"] = "Employee Details";
@@ -27,11 +27,11 @@ else if (!string.IsNullOrWhiteSpace(errorMessage))
     <table class="table  table-bordered table-hover">
         <thead>
             <tr class="table-active">
-                <th>Action</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Designation</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -40,16 +40,16 @@ else if (!string.IsNullOrWhiteSpace(errorMessage))
                 @foreach (var employee in Model)
                 {
                     <tr>
+                        <td>@employee.EmpID</td>
+                        <td>@employee.FullName</td>
+                        <td>@employee.Email</td>
+                        <td>@employee.Designation</td>
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmpID" class="btn btn-info">Edit</a> &nbsp
                                 <a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmpID" class="btn btn-danger">Delete</a>
                             </div>
                         </td>
-                        <td>@employee.EmpID</td>
-                        <td>@employee.FullName</td>
-                        <td>@employee.Email</td>
-                        <td>@employee.Designation</td>
                     </tr>
                 }
             }
